@@ -1,4 +1,4 @@
-//We always have to include the LedControl library
+// include the LedControl library (http://playground.arduino.cc/Main/LedControl)
 #include "LedControl.h"
 
 /*
@@ -190,7 +190,7 @@ void blinkEyes(boolean blinkLeft, boolean blinkRight)
     return;
   
   // close eyelids
-  for (int i=0; i<=3; i++)
+  for (int i=0; i<4; i++)
   {
     if (blinkLeft)
     {
