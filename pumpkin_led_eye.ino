@@ -1,10 +1,9 @@
+// reference: https://mjanyst.weebly.com/arduino-pumpkin-eyes.html
 // include the LedControl library (http://playground.arduino.cc/Main/LedControl)
 #include "LedControl.h"
 
-/*
- Create LetControl object, define pin connections
- We have 2 MAX72XX for eyes.
- */
+// Create LetControl object, define pin connections
+// We have 2 MAX72XX for eyes.
 #define PIN_EYES_DIN 12
 #define PIN_EYES_CS 11
 #define PIN_EYES_CLK 10
