@@ -7,6 +7,8 @@
 #define PIN_EYES_DIN 12
 #define PIN_EYES_CS 11
 #define PIN_EYES_CLK 10
+// pin8 for PIR sensor
+#define PIN_PIR_SENSOR 8
 LedControl lc = LedControl(PIN_EYES_DIN, PIN_EYES_CLK, PIN_EYES_CS, 2);
 
 // rotation
@@ -35,8 +37,13 @@ int cntLoop = 0;
 int cntEffect = 0;
 
 // min and max positions
-#define MIN -2
-#define MAX  2
+typedef enum
+{
+  MIN = -2,
+  MAX = 2,
+} eMinMaxEyePosition;
+//#define MIN -2
+//#define MAX  2
 
 // delays
 #define DELAY_BLINK 40
@@ -49,6 +56,8 @@ int cntEffect = 0;
 */
 void setup() 
 {
+  pinMode(PIN_PIR_SENSOR, INPUT);
+  
   // MAX72XX is in power-saving mode on startup, we have to do a wakeup call
   lc.shutdown(0,false);
   lc.shutdown(1,false);
@@ -104,7 +113,13 @@ void setup()
   Arduino loop
 */
 void loop() 
-{ 
+{
+  int PIR_value = digitalRead(PIN_PIR_SENSOR);
+  if(PIR_value == 1)
+  {
+    Serial.printout("high\n");
+  }
+  else Serial.printout("low\n");
   // move to random position, wait random time
   moveEyes(random(MIN, MAX + 1), random(MIN, MAX + 1), 50);
   delay(random(5, 7) * 500);
