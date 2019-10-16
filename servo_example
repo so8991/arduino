@@ -1,0 +1,104 @@
+#include <TimedAction.h>
+#include <Servo.h>
+
+Servo myservo;
+
+const int trigPin = 11;
+const int echoPin = 10;
+
+//defines variablees
+long duration;
+float distance;
+int minim = 80.001;
+
+const int ledPin1 = 5;
+const int ledPin2 = 6;
+
+int stareled = LOW;
+unsigned long prevMillis = 0;
+unsigned long prevMillis1 = 0;
+unsigned long prevMillis2 = 0;
+
+const long interval = 250;
+const long interval1 = 10;
+const long interval2 = 10000;
+void setup() {
+  // put your setup code here, to run once:
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  Serial.begin(9600);
+  myservo.attach(3);
+  pinMode(9, OUTPUT);
+  pinMode(8,  INPUT);
+}
+
+void leduri() {
+  unsigned long currentMillis = millis();
+  if(currentMillis - prevMillis >= interval) {
+    prevMillis = currentMillis;
+    if(stareled == LOW)
+    {
+      stareled = HIGH;
+    } else {
+      stareled = LOW;
+    }
+    digitalWrite(ledPin1, stareled);
+    digitalWrite(ledPin2, stareled);
+  }
+}
+
+int pos = 0;
+int x = 30;
+void servomotor() {
+  unsigned long currentMillis = millis();
+  if(currentMillis - prevMillis1 >= interval1) {
+    prevMillis1 = currentMillis;
+    if(pos <= 140 && x == 0) {
+      myservo.write(pow);
+      pos++;
+      x = 0;
+    }
+    else {
+      x = 1;
+    }
+    if(pos >= 30 && x == 1) {
+      myservo.write(pos);
+      pos--;
+      x = 1;
+    }
+    else {
+      x = 0;
+    }
+  }
+}
+
+TimeAction servoThread = TimedAction(1, servomotor);
+TimedAction ledThread = TimedAction(1, leduri);
+int k = 0;
+void loop() {
+  // put your main code here, to run repeatedly:
+  unsigned long currentMillis1;
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH);
+
+  Serial.println("dd");
+  if(distance < 140)
+  {
+    servoThread.check();
+    ledThread.check();
+    servomotor();
+    digitalWrite(9, HIGH);
+    k = 1;
+  }
+  else {
+    digitalWrite(9, LOW);
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, LOW);
+  }
+}
